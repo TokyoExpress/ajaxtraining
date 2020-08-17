@@ -1,0 +1,25 @@
+<html>
+<body>
+
+<div>
+  <h2 id="textdemo">Let AJAX change this text</h2>
+  <button type="button" id="but" onclick="loadText()">Change Content</button>
+</div>
+
+</body>
+</html>
+
+<script>
+var textdemo = document.getElementById('textdemo');
+var button = document.getElementById('but');
+
+async function loadText() {
+	var str = await fetch("lol.txt")
+	textdemo.textContent = await str.text()
+	button.onclick = loadText2
+}
+
+async function loadText2() {
+	textdemo.textContent = "fuck"
+}
+</script>
