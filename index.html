@@ -16,7 +16,7 @@ var button = document.getElementById('but');
 async function loadText() {
 	var str = await fetch("lol.txt")
 	textdemo.textContent = await str.text()
-	button.onclick = loadText2()
+	button.onclick = loadText2
 }
 
 async function loadText2() {
