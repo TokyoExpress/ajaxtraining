@@ -12,8 +12,8 @@
 <script>
 var textdemo = document.getElementById('textdemo');
 
-function loadText(fname) {
-	var str = await fetch(fname)
+async function loadText() {
+	var str = await fetch("lol.txt")
 	textdemo.innerHTML = await str.text()
 }
 
