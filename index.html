@@ -7,33 +7,138 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 </style>
 	<link rel="icon" href="https://i.imgur.com/4FKPhIc.png?1">
-	<title>Alexandria - Coming Soon</title>
+	<title>TESTING</title>
 	<link rel = "stylesheet" href = "style.css">
 	<meta charset="utf-8">
     <meta http-equiv="refresh" content="3600">
-    <meta name="description" content= "Personalized art exhibits in the palm of your hand.">
+    <meta name="description" content= "COOL">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 	<div id="one">
-		<div id="painting">
-			<img src="lol"></img>
-		</div>
+			<img id="pic1" src="https://i.imgur.com/gwXYDh6.jpg"></img>
+			<img class="painting" id="pic2" src="https://i.imgur.com/83LLcxC.jpg"></img>
+			<img class="painting" id="pic3" src="https://i.imgur.com/8F2y50z.jpg"></img>
+			<img id="logo" src="https://i.imgur.com/dPEV7Op.png" width=50px draggable="false"></img>
+			<p id="header">QUIZ NAME</p>
 		<div id="quiz">
-			<div id="nav">
-				<img id="logo" src="https://i.imgur.com/dPEV7Op.png"></img>
-				<h3>QUIZ NAME</h3>
-			</div>
 			<div id="progress">
-				<div></div>
+				<div id="progressbar"></div>
 			</div>
+			<p id="progtext">1 of 20</p>
 			<div id="choices">
-				<img id="like" src="lol"></img>
-				<img id="dislike" src="lol"></img>
+				<button id="yesbutton">
+					<svg id="yes" class="hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108.2 81.2" height=70px>
+						<style type="text/css">.st0{fill:none;stroke-width:16;stroke-miterlimit:10;}</style>
+						<line class="st0" x1="46.2" y1="73.7" x2="8.1" y2="35.5"/>
+						<line class="st0" x1="34.9" y1="73.7" x2="99.9" y2="8.6"/>
+					</svg>
+				</button>
+				<button id="nobutton">
+					<svg id="no" class="hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.6 81.2" height=70px>
+						<style type="text/css">.st0{fill:none;stroke-width:16;stroke-miterlimit:10;}</style>
+						<line class="st0" x1="8.3" y1="73.7" x2="73.3" y2="8.6"/>
+						<line class="st0" x1="73.3" y1="73.7" x2="8.3" y2="8.6"/>
+					</svg>
+				</button>
 			</div>
-			<img id="palette" src="lol"></img>
+			<img id="palette" src="https://i.imgur.com/cEL7H9s.png" height=80px draggable="false"></img>
 		</div>
 	</div>
 </body>
 </html>
+
+<script>
+
+let palettes = ['https://i.imgur.com/5L1wuz0.png', 'https://i.imgur.com/KI2610u.png'];
+var current = -1;
+
+var style = window.getComputedStyle(document.getElementById("progress"));
+var width = style.getPropertyValue('width');
+var step = parseInt(width, 10) / 3;
+
+var style2 = window.getComputedStyle(document.getElementById("one"));
+var docheight = style2.getPropertyValue('height');
+
+document.getElementById("yesbutton").addEventListener("click", function(){
+	disable();
+	document.getElementById('no').style.transition = "none";
+	document.getElementById('no').style.stroke = "#4A0C0E";
+	magic();
+});
+
+document.getElementById("nobutton").addEventListener("click", function(){
+	disable();
+	document.getElementById('yes').style.transition = "none";
+	document.getElementById('yes').style.stroke = "#4A0C0E";
+	magic();
+});
+
+function disable() {
+	document.getElementById("yesbutton").disabled = true;
+	document.getElementById("nobutton").disabled = true;
+	document.getElementById("yes").classList.remove("hover");
+	document.getElementById("no").classList.remove("hover");
+	document.getElementById("yesbutton").style.cursor = "auto";
+	document.getElementById("nobutton").style.cursor = "auto";
+}
+
+function enable() {
+	document.getElementById("yesbutton").disabled = false;
+	document.getElementById("nobutton").disabled = false;
+	document.getElementById("yes").classList.add("hover");
+	document.getElementById("no").classList.add("hover");
+	document.getElementById("yesbutton").style.cursor = "pointer";
+	document.getElementById("nobutton").style.cursor = "pointer";
+	document.getElementById('yes').style.transition = "0.25s";
+	document.getElementById('no').style.transition = "0.25s";
+	document.getElementById('yes').style.stroke = "white";
+	document.getElementById('no').style.stroke = "white";
+}
+
+function magic() {
+	cur = "pic" + (current + 2);
+	nex = "pic" + (current + 3);
+	document.getElementById(cur).style.opacity = 0;
+	document.getElementById("palette").style.opacity = 0;
+	setTimeout(baradvance, 500);
+	setTimeout(advance, 1200);
+	setTimeout(function() {
+		document.getElementById(nex).style.transition = "1s";
+		document.getElementById(nex).style.opacity = 1;
+		document.getElementById("palette").style.opacity = 1;
+	}, 1500);
+	setTimeout(enable, 1500);
+	setTimeout(function() {
+		current = current + 1;
+	}, 1500);
+}
+
+function advance() {
+	cur = "pic" + (current + 2);
+	nex = "pic" + (current + 3);
+	document.getElementById(cur).style.display = "none";
+	document.getElementById("palette").src = palettes[current+1];
+	document.getElementById(nex).style.display = "block";
+	document.getElementById(nex).style.transition = "none";
+	var top = (window.innerHeight - document.getElementById(nex).offsetHeight) / 2;
+	document.getElementById(nex).style.marginTop = top + "px";
+}
+
+function baradvance() {
+	var bar = document.getElementById("progressbar");
+	var st = window.getComputedStyle(bar);
+	var barwidth = st.getPropertyValue('width');
+	var barwidth = parseInt(barwidth, 10) + step;
+	if (parseInt(barwidth, 10) > parseInt(width, 10)) {
+		document.getElementById("progressbar").style.width = "100%";
+	}
+	else {
+		document.getElementById("progressbar").style.width = barwidth + "px";
+	}
+	document.getElementById("progtext").innerHTML = (current + 3) + " of 20";
+}
+
+
+</script>
