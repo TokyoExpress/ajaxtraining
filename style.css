@@ -59,8 +59,11 @@ body {
 	grid-gap: 0;
 }
 
-#pic1, #pic2, #pic3 {
+#pic1, #pic2 {
 	opacity: 0;
+}
+
+#pic1, #pic2, #pic3 {
 	grid-column-start: 1;
 	grid-row-start: 1;
 	grid-row-end: 2;
