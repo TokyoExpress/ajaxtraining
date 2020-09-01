@@ -17,17 +17,25 @@
 </head>
 <body>
 	<div id="one">
-			<img id="pic1" src="https://i.imgur.com/gwXYDh6.jpg"></img>
-			<img class="painting" id="pic2" src="https://i.imgur.com/83LLcxC.jpg"></img>
-			<img class="painting" id="pic3" src="https://i.imgur.com/8F2y50z.jpg"></img>
-			<img id="logo" src="https://i.imgur.com/dPEV7Op.png" width=50px draggable="false"></img>
-			<p id="header">QUIZ NAME</p>
+			<img id="pic1" class="hide" src="https://uploads5.wikiart.org/images/giovanni-bellini/st-francis-in-ecstasy-1485.jpg!Large.jpg"></img>
+			<img id="pic2" class="hide" src="https://uploads6.wikiart.org/images/raphael/school-of-athens-detail-from-right-hand-side-showing-diogenes-on-the-steps-and-euclid-1511.jpg!Large.jpg"></img>
+			<img id="pic3" src="https://i.imgur.com/rlSo4YE.jpg"></img>
+			<div id="nav">
+				<img id="logo" src="https://i.imgur.com/dPEV7Op.png" width=50px draggable="false"></img>
+				<img id="header" draggable="false" src="https://i.imgur.com/mJh89bW.png"></img>
+			</div>
 		<div id="quiz">
-			<div id="progress">
+			<div id="text">
+				<p class="sub">How do you perceive and encounter art? What aspects and definitions of "beauty" appeal to you? Take this free short test to determine which school of aesthetic experience you belong to.</p>
+				<p class="sub">The test should take no more than 5 minutes. You will be shown a series of pieces. Take a few seconds to decide whether or not you like the artwork or not, then click the answer that corresponds to how you feel (check mark if you liked it, X mark if you did not).</p>
+				<p class="sub">Sound good? Click the button below to get started!</p>
+				<input id="start" type="submit" value="BEGIN">
+			</div>
+			<div class="hide" id="progress">
 				<div id="progressbar"></div>
 			</div>
-			<p id="progtext">1 of 20</p>
-			<div id="choices">
+			<p class="hide" id="progtext">1 of 40</p>
+			<div class="hide" id="choices">
 				<button id="yesbutton">
 					<svg id="yes" class="hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108.2 81.2" height=70px>
 						<style type="text/css">.st0{fill:none;stroke-width:16;stroke-miterlimit:10;}</style>
@@ -49,96 +57,4 @@
 </body>
 </html>
 
-<script>
-
-let palettes = ['https://i.imgur.com/5L1wuz0.png', 'https://i.imgur.com/KI2610u.png'];
-var current = -1;
-
-var style = window.getComputedStyle(document.getElementById("progress"));
-var width = style.getPropertyValue('width');
-var step = parseInt(width, 10) / 3;
-
-var style2 = window.getComputedStyle(document.getElementById("one"));
-var docheight = style2.getPropertyValue('height');
-
-document.getElementById("yesbutton").addEventListener("click", function(){
-	disable();
-	document.getElementById('no').style.transition = "none";
-	document.getElementById('no').style.stroke = "#4A0C0E";
-	magic();
-});
-
-document.getElementById("nobutton").addEventListener("click", function(){
-	disable();
-	document.getElementById('yes').style.transition = "none";
-	document.getElementById('yes').style.stroke = "#4A0C0E";
-	magic();
-});
-
-function disable() {
-	document.getElementById("yesbutton").disabled = true;
-	document.getElementById("nobutton").disabled = true;
-	document.getElementById("yes").classList.remove("hover");
-	document.getElementById("no").classList.remove("hover");
-	document.getElementById("yesbutton").style.cursor = "auto";
-	document.getElementById("nobutton").style.cursor = "auto";
-}
-
-function enable() {
-	document.getElementById("yesbutton").disabled = false;
-	document.getElementById("nobutton").disabled = false;
-	document.getElementById("yes").classList.add("hover");
-	document.getElementById("no").classList.add("hover");
-	document.getElementById("yesbutton").style.cursor = "pointer";
-	document.getElementById("nobutton").style.cursor = "pointer";
-	document.getElementById('yes').style.transition = "0.25s";
-	document.getElementById('no').style.transition = "0.25s";
-	document.getElementById('yes').style.stroke = "white";
-	document.getElementById('no').style.stroke = "white";
-}
-
-function magic() {
-	cur = "pic" + (current + 2);
-	nex = "pic" + (current + 3);
-	document.getElementById(cur).style.opacity = 0;
-	// document.getElementById("palette").style.opacity = 0;
-	setTimeout(baradvance, 500);
-	setTimeout(advance, 1200);
-	setTimeout(function() {
-		document.getElementById(nex).style.transition = "1s";
-		document.getElementById(nex).style.opacity = 1;
-		// document.getElementById("palette").style.opacity = 1;
-	}, 1500);
-	setTimeout(enable, 1500);
-	setTimeout(function() {
-		current = current + 1;
-	}, 1500);
-}
-
-function advance() {
-	cur = "pic" + (current + 2);
-	nex = "pic" + (current + 3);
-	document.getElementById(cur).style.display = "none";
-	// document.getElementById("palette").src = palettes[current+1];
-	document.getElementById(nex).style.display = "block";
-	document.getElementById(nex).style.transition = "none";
-	var top = (window.innerHeight - document.getElementById(nex).offsetHeight) / 2;
-	document.getElementById(nex).style.marginTop = top + "px";
-}
-
-function baradvance() {
-	var bar = document.getElementById("progressbar");
-	var st = window.getComputedStyle(bar);
-	var barwidth = st.getPropertyValue('width');
-	var barwidth = parseInt(barwidth, 10) + step;
-	if (parseInt(barwidth, 10) > parseInt(width, 10)) {
-		document.getElementById("progressbar").style.width = "100%";
-	}
-	else {
-		document.getElementById("progressbar").style.width = barwidth + "px";
-	}
-	document.getElementById("progtext").innerHTML = (current + 3) + " of 20";
-}
-
-
-</script>
+<script src="main.js"></script>

@@ -11,6 +11,10 @@ body {
 	/* #C19547 2275x1794*/
 }
 
+#text, #pic3, #start {
+	transition: 1s;
+}
+
 #one {
 	opacity: 0;
 	animation: transitionIn 1s 0.5s forwards;
@@ -50,25 +54,12 @@ body {
 	top: 0;
 	height: 100%;
 	width: 100%;
-	grid-template-columns: 13fr 7fr 100px;
-	grid-template-rows: 200px 1fr;
+	grid-template-columns: 5fr 3fr 100px;
+	grid-template-rows: 225px 1fr;
 	grid-gap: 0;
 }
 
-#pic1 {
-	grid-column-start: 1;
-	grid-row-start: 1;
-	grid-row-end: 2;
-	max-height: 75vh;
-	max-width: 47vw;
-	justify-self: center;
-	margin-top: 11vh;
-	border: 16px solid #AB833F;
-	transition: 1s;
-}
-
-.painting {
-	display: none;
+#pic1, #pic2, #pic3 {
 	opacity: 0;
 	grid-column-start: 1;
 	grid-row-start: 1;
@@ -80,6 +71,12 @@ body {
 	transition: 1s;
 }
 
+.hide {
+   position: absolute !important;
+   top: -9999px !important;
+   left: -9999px !important;
+}
+
 #quiz {
 	width: 100%;
 	grid-column-start: 2;
@@ -87,23 +84,52 @@ body {
 	align-self: start;
 }
 
+#nav {
+	grid-column-start: 2;
+	grid-row-start: 1;
+	align-self: center;
+}
+
 #logo {
+	display: block;
 	grid-column-start: 2;
 	grid-row-start: 1;
 	justify-self: left;
-	align-self: center;
+	margin-bottom: 50px;
 }
 
 #header {
 	grid-column-start: 2;
 	grid-row-start: 1;
-	display: inline;
+	display: block;
+	width: 95%;
+}
+
+.sub {
+	grid-column-start: 2;
+	grid-row-start: 1;
+	display: block;
 	vertical-align: middle;
-	font-size: 36px;
+	margin-bottom: 25px;
+	font-size: 20px;
 	color: white;
-	letter-spacing: 2px;
 	justify-self: center;
-	align-self: center;
+	transition: 1s;
+}
+
+input[type=submit] {
+	display: block;
+	background-color: white;
+	border: none;
+	color: #7F1418;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 28px;
+	padding: 7px 20px;
+	border-radius: 25px;
+	cursor: pointer;
+	-webkit-appearance: none;
+	margin: 75px auto 0 auto;
+	outline: none;
 }
 
 button {
@@ -120,6 +146,7 @@ button {
 	margin-bottom: 17vh;
 	width: 100%;
 	justify-content: space-around;
+	transition: 1s;
 }
 
 #yes {
@@ -138,6 +165,7 @@ button {
 	border-radius: 8px;
 	padding: 3px;
 	margin-bottom: 25px;
+	transition: 1s;
 }
 
 #progressbar {
@@ -163,6 +191,7 @@ button {
 	font-size: 20px;
 	letter-spacing: 1px;
 	margin-bottom: 15vh;
+	transition: 1s;
 }
 
 svg {
