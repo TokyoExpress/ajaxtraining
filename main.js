@@ -1,3 +1,30 @@
+/*
+ * script to grab question from database and send user results back to database
+ *
+ * @author: tokyoexpress
+ * @author: mcheng88
+ *
+ */
+
+// Firebase configurations
+var firebaseConfig = {
+    apiKey: "AIzaSyCSTBnB8S4HztxFqc_NOGBsl2SDV-tlukM",
+    authDomain: "alexandria-app.firebaseapp.com",
+    databaseURL: "https://alexandria-app.firebaseio.com",
+    projectId: "alexandria-app",
+    storageBucket: "alexandria-app.appspot.com",
+    messagingSenderId: "737018708983",
+    appId: "1:737018708983:web:8a518f0f545d63a56ce4f2",
+    measurementId: "G-YJYZ3T71Y5"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+// extract database
+var database = firebase.database();
+
+// hardcoded json database - deprecate
 var json = {
     "artworks": [
         {
@@ -361,16 +388,38 @@ var json = {
             "resultGrouping": "Ais"
         }
     ],
-    "users": [
-        {
-            "userid": "hello@alexandria.app",
+    "modular": [
+        "https://uploads7.wikiart.org/images/red-grooms/untitled.jpg",
+        "https://uploads5.wikiart.org/00129/images/diego-velazquez/las-meninas.jpg",
+        "https://uploads3.wikiart.org/images/qi-baishi/the-chickens-are-happy-sun-1949.jpg",
+        "https://uploads1.wikiart.org/images/katsushika-hokusai/cranes-from-quick-lessons-in-simplified-drawing.jpg",
+        "https://uploads8.wikiart.org/images/m-f-husain/ganesh-1.jpg"
+    ], 
+    "human": [
+        "https://uploads6.wikiart.org/images/pablo-picasso/las-meninas-velazquez.jpg",
+        "https://uploads3.wikiart.org/images/raphael/the-sistine-madonna-1513.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Gustav_Klimt_055.jpg/800px-Gustav_Klimt_055.jpg",
+        "https://uploads1.wikiart.org/images/robert-rauschenberg/signs-1970.jpg",
+        "https://uploads0.wikiart.org/images/katsushika-hokusai/ejiri-in-the-suruga-province.jpg",
+        "https://uploads2.wikiart.org/images/guanxiu/the-14th-vanavasin-arhat.jpg"
+    ], 
+    "ais": [
+        "https://uploads0.wikiart.org/00237/images/robert-rauschenberg/8.jpg",
+        "https://uploads2.wikiart.org/00282/images/caspar-david-friedrich/e614b157bdf09bf9e48dcd8e1754645d.jpg",
+        "https://uploads1.wikiart.org/images/shitao/two-flowers-in-conversation-1694.jpg",
+        "https://uploads5.wikiart.org/images/utagawa-kuniyoshi/thirty-six-famous-battles.jpg",
+        "https://uploads8.wikiart.org/00116/images/guan-zilan/60.jpg"
+    ],
+    "users": {
+        "machine-generated-user": {
+            "email": "hello@alexandria.app",
             "timestamp": "2020-08-26T22:10:31Z",
             "liked": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             "modular": 10,
             "human": 10,
             "ais": 10
         }
-    ]
+    }
 };
 // image array controls
 var imageArray = json.artworks;
@@ -378,15 +427,17 @@ var counter = 0;
 var currentPainting = imageArray[counter];
 
 // Collected user data
-// TODO userid, timestamp
+// TODO email, timestamp
+// TODO generate a locally cached userid to identify previous user
 var likeArray = new Array(40);
 var modular = 0;
 var human = 0;
 var ais = 0;
 var timestamp;
 var userid; 
+var email; 
 
-// Misc variables
+// Image change variables 
 var current = -1;
 var pick = true;
 var style = window.getComputedStyle(document.getElementById("progress"));
@@ -454,7 +505,6 @@ document.getElementById("yesbutton").addEventListener("click", function(){
 	disable();
 	document.getElementById('no').style.transition = "none";
 	document.getElementById('no').style.stroke = "#4A0C0E";
-	// likeArray[counter]++;
 	like();
     magic();
 });
@@ -493,6 +543,11 @@ function enable() {
 
 // Helper function that fades and switches out pictures
 function magic() {
+    if(counter >= 39){
+        console.log("DONE!");
+        generateResults(determineResultGrouping());
+        return;
+    }
 	var currentPaintingLink = imageArray[counter+1].wikiartLink;
     console.log(currentPaintingLink);
     if(pick){
@@ -517,6 +572,7 @@ function magic() {
 	}, 1500);
 	setTimeout(enable, 1500);
     pick = !pick;
+    currentPainting = imageArray[counter];
 }
 
 // Helper for the helper that switches out pictures
@@ -555,26 +611,62 @@ function like() {
 }
 
 
-// Converts user data to JSON, then sends to firebase.
+// Converts user data to JSON and sends to firebase.
 function sendUserInfo() {
-
+    firebase.database().ref('users/' + userid).set({
+        email: email,
+        timestamp: timestamp,
+        liked: likeArray,
+        ais: ais,
+        human: human,
+        modular: modular,
+    });
 }
 
-// compare results sums, and switches to results page 
-// not sure how to do edge cases yet 
-function createResults() {
-    if(modular >= human && modular >= ais) {
-        // switch to modular results
+// compare results sums 
+// if two are max and same, then the first one in the following if block is chosen.  
+// @return string name of result group.
+function determineResultGrouping() {
+    if(human >= modular && human >= ais) {
+        return "Human";
     }
-    else if(human >= modular && human >= ais) {
-        // switch to human results
+    else if(modular >= human && modular >= ais) {
+        return "Modular";
     }
     else if(ais >= modular && ais >= human) {
-        // switch to ais results
+        return "Ais";
     }
 }
 
-// chooses 3 of result art(need creation)
-function chooseResultsImage(){
+// generates results page
+function generateResults(resultid) {
+    // identify result and display correct image
+    console.log(resultid);
+    if(resultid.match("Human")) { 
+        resultArray = json.human;
+        // resultArray = firebase.database().ref(resultid+'/');
+        // display "human" text
+    } 
+    else if (resultid.match("Modular")) {
+        resultArray = json.modular;
+        // display "modular" results text
+        // display "human" text
+    }
+    else if (resultid.match("Ais")) {
+        resultArray = json.ais;
+        // display "human" text
+    }
+    
+    const shuffled = resultArray.sort(() => 0.5 - Math.random());
+    let selected = shuffled.slice(0, 3);
+    let img1link = shuffled[0];
+    let img2link = shuffled[1];
+    let img3link = shuffled[3];
 
+    //change example image source from blank to links
+    document.getElementById(example1).src = img1link;
+    document.getElementById(example2).src = img2link;
+    document.getElementById(example3).src = img2link;
+    
+    // display example1, example2, example3
 }
